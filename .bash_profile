@@ -25,7 +25,7 @@ function __init() {
   __init_prompt
 
   # load custom init extensions
-  if [ -d "$_profiles" -a -r $_profiles/* ]; then
+  if [ -d "$_profiles" ] && [ 0 -ne "$(ls -1 "$_profiles"/ | wc -l)" ]; then
     for init in $_profiles/*; do
       . $init
     done
@@ -50,8 +50,16 @@ function __init() {
 function __init_path_additions() {
   local _pfx="${1:-/usr/local}"
 
+  if [ -d "$_pfx/sbin" ]; then
+    export PATH="$_pfx/sbin:$PATH"
+  fi
+
   if type go &> /dev/null; then
     export PATH="$(go env GOPATH)/bin:$PATH"
+  fi
+
+  if [ -r "$HOME/.cargo/env" ]; then
+    . "$HOME/.cargo/env"
   fi
 
   if [ -d "$HOME/bin" ]; then
@@ -60,14 +68,6 @@ function __init_path_additions() {
 
   if [ -d "$HOME/.local/bin" ]; then
     export PATH="$HOME/.local/bin:$PATH"
-  fi
-
-  if [ -r "$HOME/.cargo/env" ]; then
-    . "$HOME/.cargo/env"
-  fi
-
-  if [ -d "$_pfx/sbin" ]; then
-    export PATH="$_pfx/sbin:$PATH"
   fi
 }
 
@@ -83,13 +83,13 @@ function __init_git() {
   GIT_PS1_SHOWDIRTYSTATE="true"
   GIT_PS1_SHOWUPSTREAM="auto"
 
-  if (type mvim &> /dev/null); then
+  if type mvim &> /dev/null; then
     export GIT_EDITOR="mvim -f"
   fi
 }
 
 function __init_version_managers() {
-  if (type direnv &> /dev/null); then
+  if type direnv &> /dev/null; then
     eval "$(direnv hook bash)"
   fi
 
@@ -102,7 +102,7 @@ function __init_version_managers() {
     fi
   fi
 
-  if (type rbenv &> /dev/null); then
+  if type rbenv &> /dev/null; then
     eval "$(rbenv init - bash)"
   fi
 }
@@ -160,7 +160,7 @@ function __show_env_name() {
         local envtag="$(printf "\[\e[31;5;1m\]::: 🚨 \[\e[0;31;1m\]%s\[\e[31;5;1m\] 🚨 :::\[\e[0m\]" "$envname")"
         ;;
       preprod|ppd|staging|stage|uat)
-        local envtag="$(printf "\[\e[35;1m\]::: %s :::\[\e[0m\]" "$envname")"
+        local envtag="$(printf "\[\e[35;1m\]::: 💡 %s 💡 :::\[\e[0m\]" "$envname")"
         ;;
       nonprod|npe|qa)
         local envtag="$(printf "\[\e[36;1m\]%s\[\e[0m\]" "$envname")"
