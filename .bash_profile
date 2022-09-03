@@ -86,6 +86,8 @@ function __init_git() {
   if type mvim &> /dev/null; then
     export GIT_EDITOR="mvim -f"
   fi
+
+  alias g="git"
 }
 
 function __init_version_managers() {
@@ -125,8 +127,17 @@ function __init_completions() {
 
       . $init
     done
+  elif [ -r /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
 
-    alias g="git"
+    if ! type __git_complete &> /dev/null && [ -r /usr/share/bash-completion/completions/git ]; then
+      . /usr/share/bash-completion/completions/git
+    fi
+  elif [ -r /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+
+  if type __git_complete &> /dev/null && [ "alias g='git'" = "$(alias g 2> /dev/null)" ]; then
     __git_complete g __git_main
   fi
 }
