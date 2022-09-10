@@ -20,10 +20,6 @@ if hash fzf &> /dev/null; then
 
   if hash bats &> /dev/null; then
     export FZF_CTRL_T_OPTS="--preview 'bat --style=numbers --color=always --line-range :500 {}' $FZF_CTRL_T_OPTS"
-    alias peek="fzf --preview 'bat --style=numbers --color=always --line-range :500 {}'"
-
-    # binds Ctrl-SPC to peek
-    bind '"\C- ":"peek\n"'
   fi
 
   if [ -f ~/.fzf.bash ]; then
