@@ -22,7 +22,7 @@ export COPY_EXTENDED_ATTRIBUTES_DISABLE="1"
 
 function __init() {
   local _pfx="$(type brew &> /dev/null && brew --prefix || echo "/usr/local")"
-  local _profiles="$HOME/profile.d"
+  local -a _profiles=("$HOME/.local/profile.d" "$HOME/profile.d")
 
   __init_git
   __init_version_managers
@@ -30,12 +30,22 @@ function __init() {
   __init_completions "$_pfx"
   __init_prompt
   __init_productivity
+  __defun_motd
 
-  # load custom init extensions
-  if [ -d "$_profiles" ] && [ "$(ls -1A "$_profiles")" ]; then
-    for init in $_profiles/*; do
-      . $init
-    done
+  for dir in "${_profiles[@]}"; do
+    # load custom init extensions
+    if [ -d "$dir" ] && [ "$(ls -1A "$dir")" ]; then
+      for init in "$dir"/*; do
+        . $init
+      done
+    fi
+  done
+
+  if command -v mvim &> /dev/null; then
+    export VISUAL="mvim -f"
+    export EDITOR="mvim -f"
+  else
+    export EDITOR="vim"
   fi
 
   # cleanup scope
@@ -45,7 +55,12 @@ function __init() {
   unset __init_completions
   unset __init_prompt
   unset __init_productivity
+  unset __defun_motd
   unset __init
+
+  if [ "$(ls ~/.ansi)" ]; then
+    motd
+  fi
 }
 
 #     /\                __  .__                  /\
@@ -116,18 +131,6 @@ function __init_version_managers() {
     eval "$(rbenv init - bash)"
   fi
 }
-
-#      /\                             .___               __   .__        .__   __                 /\ 
-#     / /  ______ _______   ____    __| _/__ __   ____ _/  |_ |__|___  __|__|_/  |_  ___.__.     / / 
-#    / /   \____ \\_  __ \ /  _ \  / __ ||  |  \_/ ___\\   __\|  |\  \/ /|  |\   __\<   |  |    / /  
-#   / /    |  |_> >|  | \/(  <_> )/ /_/ ||  |  /\  \___ |  |  |  | \   / |  | |  |   \___  |   / /   
-#  / /     |   __/ |__|    \____/ \____ ||____/  \___  >|__|  |__|  \_/  |__| |__|   / ____|  / /    
-#  \/      |__|                        \/            \/                              \/       \/     
-
-function __init_productivity() {
-  [ -r ~/.fzf.bash ] && source ~/.fzf.bash
-}
-  
 
 #     /\                             .__          __  .__                           /\
 #    / /   ____  ____   _____ ______ |  |   _____/  |_|__| ____   ____   ______    / /
@@ -221,17 +224,19 @@ function __show_env_name() {
 # / /    (____  /____  >\___  >__|__|  |__|_|  /\____/|__| \____ |  / /
 # \/          \/     \/     \/               \/                 \/  \/
 
-if command -v cp437 &> /dev/null; then
-  function ansicat { cp437 cat "$@"; }
-else
-  function ansicat { iconv -c -f 437 -t utf-8 "$@"; }
-fi
+function __defun_motd() {
+  if command -v cp437 &> /dev/null; then
+    function ansicat { cp437 cat "$@"; }
+  else
+    function ansicat { iconv -c -f 437 -t utf-8 "$@"; }
+  fi
 
-function motd {
-  local art="${1:-$(ls ~/.ansi/* | sort -R | tail -1)}"
-  ansicat "$art"
-  tput sgr0
-  printf '\n\n'
+  function motd {
+    local art="${1:-$(ls ~/.ansi/* | sort -R | tail -1)}"
+    ansicat "$art"
+    tput sgr0
+    printf '\n\n'
+  }
 }
 
 #     /\      /\                         .__       .__  __
@@ -241,14 +246,4 @@ function motd {
 # / /     / /      |__|  |____/|___|  /  |__|___|  /__||__|
 # \/      \/                        \/           \/
 
-if command -v mvim &> /dev/null; then
-  export editor="mvim"
-else
-  export editor="vim"
-fi
-
 __init
-
-if [ "$(ls ~/.ansi)" ]; then
-  motd
-fi
