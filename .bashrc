@@ -29,7 +29,6 @@ function __init() {
   __init_path_additions "$_pfx"
   __init_completions "$_pfx"
   __init_prompt
-  __init_productivity
   __defun_motd
 
   for dir in "${_profiles[@]}"; do
@@ -54,7 +53,6 @@ function __init() {
   unset __init_path_additions
   unset __init_completions
   unset __init_prompt
-  unset __init_productivity
   unset __defun_motd
   unset __init
 
