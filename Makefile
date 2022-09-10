@@ -10,4 +10,4 @@ help:          ## Show this message
 all: dotfiles  ## Install everything
 
 dotfiles:      ## Install dotfiles
-	for file in $$(git ls-files '.*'); do ln -sfn "$(CURDIR)/$$file" ~/; done
+	@for file in $$(git ls-files '.*' | grep -vF -e / -e .gitignore); do printf '  >> \e[36mInstalling %-20s -> ~/%s \e[0m\n' "$$file" "$$file"; ln -sfn "$(CURDIR)/$$file" ~/; done
