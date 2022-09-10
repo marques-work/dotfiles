@@ -25,7 +25,7 @@ function __init() {
   __init_prompt
 
   # load custom init extensions
-  if [ -d "$_profiles" ] && [ 0 -ne "$(ls -1 "$_profiles"/ | wc -l)" ]; then
+  if [ -d "$_profiles" ] && [ "$(ls -1A "$_profiles")" ]; then
     for init in $_profiles/*; do
       . $init
     done
@@ -118,6 +118,10 @@ function __init_version_managers() {
 
 function __init_completions() {
   local _pfx="${1:-/usr/local}"
+
+  if [ -r "$_pfx/etc/profile.d/bash_completion.sh" ]; then
+    . "$_pfx/etc/profile.d/bash_completion.sh"
+  fi
 
   if [ -d "$_pfx/etc/bash_completion.d" ]; then
     for init in $_pfx/etc/bash_completion.d/*; do
@@ -225,6 +229,6 @@ fi
 
 __init
 
-if [[ $- == *i* ]] && ls -A ~/.ansi/* &> /dev/null; then
+if [[ $- == *i* ]] && [ "$(ls ~/.ansi)" ]; then
   motd
 fi
