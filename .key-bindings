@@ -1,0 +1,5 @@
+#!/bin/bash
+# vim: sts=2 sw=2 et syntax=bash
+
+# shortcut to github clone
+bind '"\C-x\C-g":"git clone git@github.com:"'

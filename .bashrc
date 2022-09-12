@@ -31,6 +31,10 @@ function __init() {
   __init_prompt
   __defun_motd
 
+  for init in "$HOME"/.{aliases,functions,key-bindings}; do
+    [ -f "$init" ] && source "$init"
+  done
+
   for dir in "${_profiles[@]}"; do
     # load custom init extensions
     if [ -d "$dir" ] && [ "$(ls -1A "$dir")" ]; then
