@@ -7,7 +7,7 @@ SHELL := bash
 help:          ## Show this message
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN { FS = ":.*?## " }; { printf "\033[36;1m%-20s\033[0m \033[37;1m%s\033[0m\n", $$1, $$2 }'
 
-all: dotfiles  ## Install everything
+all: dotfiles gitconfig  ## Install everything
 
 dotfiles:      ## Install dotfiles
 	@printf '\e[37;1mProcessing dotfiles\e[0m\n'
@@ -21,3 +21,6 @@ dotfiles:      ## Install dotfiles
 	  printf '  >> \e[36mInstalling %-30s -> ~/%s \e[0m\n' "$$file" "$$file"; \
 	  ln -sfn "$(CURDIR)/$$file" ~/$$file; \
 	done
+
+gitconfig:     ## builds gitconfig file
+	bash build/git-config-build.sh
