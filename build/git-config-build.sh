@@ -15,7 +15,7 @@ function _build_gitconfig() {
   _gcfg alias.gr log\ --graph\ --decorate=short\ --abbrev-commit\ --pretty=short
   _gcfg alias.ig status\ --ignored
   _gcfg alias.kl clean\ -ffdx\ -e\ .idea\ -e\ .envrc\ -e\ .tool-versions
-  _gcfg alias.mine \!git\ log\ --author=\"\$\(id\ -F\)\"\ --pretty=\'%C\(yellow\)%h%Creset\ %an\ %C\(cyan\)%ad%Creset\ %Cred%cd%Creset\ %Cgreen%s%Creset\'
+  _gcfg alias.mine \!git\ log\ --author=\"\$\(git\ config\ --get\ user.name\)\"\ --pretty=\'%C\(yellow\)%h%Creset\ %an\ %C\(cyan\)%ad%Creset\ %Cred%cd%Creset\ %Cgreen%s%Creset\'
   _gcfg alias.mu merge\ @\{u\}
   _gcfg alias.pend log\ @\{u\}..HEAD
   _gcfg alias.rc rebase\ --continue
