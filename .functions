@@ -1,0 +1,32 @@
+#!/bin/bash
+# vim: sts=2 sw=2 et
+
+function trim() {
+  awk '{ sub(/^[ \t]+/, ""); sub(/[ \t]+$/, ""); print }' <<< "$*"
+}
+
+if hash figlet &> /dev/null; then
+  function fig-banner() {
+    local text="$*"
+
+    if [ -z "$text" ]; then
+      >&2 printf 'What should the banner say?: '
+      while [ -z "$text" ]; do
+        read -r text
+
+        text="$(trim "$text")"
+
+        if [ -z "$text" ]; then
+          >&2 printf 'Text must not be blank; try again or \e[37;1mpress Ctrl-C to cancel:\e[0m '
+        fi
+      done
+    fi
+
+    figlet -f graffiti -k -w 3000 "$text"
+  }
+
+  # banner-comment
+  function bancom() {
+    fig-banner "$*" | awk '{ print "#", $0 }'
+  }
+fi
