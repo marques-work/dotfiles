@@ -22,7 +22,7 @@ if hash figlet &> /dev/null; then
       done
     fi
 
-    figlet -f graffiti -k -w 3000 "$text"
+    figlet -f graffiti -k -w 3000 "$text" | awk '{ gsub(/[ \t]+$/, "", $0); print }'
   }
 
   # banner-comment
