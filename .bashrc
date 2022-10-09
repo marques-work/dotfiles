@@ -127,7 +127,15 @@ function __init_version_managers() {
     if [ -r "$HOME/.asdf/plugins/java/set-java-home.bash" ]; then
       . "$HOME/.asdf/plugins/java/set-java-home.bash"
     fi
+  elif [ -r /usr/local/opt/asdf/libexec/asdf.sh ]; then
+    # homebrew
+    . /usr/local/opt/asdf/libexec/asdf.sh
+
+    if [ -r "$HOME/.asdf/plugins/java/set-java-home.bash" ]; then
+      . "$HOME/.asdf/plugins/java/set-java-home.bash"
+    fi
   fi
+
 
   if type rbenv &> /dev/null; then
     eval "$(rbenv init - bash)"
