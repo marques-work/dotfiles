@@ -21,6 +21,10 @@ export COPY_EXTENDED_ATTRIBUTES_DISABLE="1"
 # \/             \/           \/
 
 function __init() {
+  if [ -x /opt/homebrew/bin/brew ]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  fi
+
   local _pfx="$(type brew &> /dev/null && brew --prefix || echo "/usr/local")"
   local -a _profiles=("$HOME/.local/profile.d" "$HOME/profile.d")
 
@@ -60,7 +64,7 @@ function __init() {
   unset __defun_motd
   unset __init
 
-  if [ "$(ls ~/.ansi)" ]; then
+  if [ -d ~/.ansi ] && ls ~/.ansi/* &> /dev/null; then
     motd
   fi
 }
