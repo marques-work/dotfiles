@@ -29,6 +29,7 @@ function __init() {
   local -a _profiles=("$HOME/.local/profile.d" "$HOME/profile.d")
 
   __init_git
+  __init_ssh
   __init_version_managers
   __init_path_additions "$_pfx"
   __init_completions "$_pfx"
@@ -57,6 +58,7 @@ function __init() {
 
   # cleanup scope
   unset __init_git
+  unset __init_ss
   unset __init_version_managers
   unset __init_path_additions
   unset __init_completions
@@ -117,6 +119,11 @@ function __init_git() {
   fi
 
   alias g="git"
+}
+
+function __init_ssh() {
+  eval "$(ssh-agent -s)"
+  trap "ssh-agent -k" EXIT
 }
 
 function __init_version_managers() {
