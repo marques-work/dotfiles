@@ -26,7 +26,6 @@ function __init() {
   fi
 
   local _pfx="$(type brew &> /dev/null && brew --prefix || echo "/usr/local")"
-  local -a _profiles=("$HOME/.local/profile.d" "$HOME/profile.d")
 
   __init_git
   __init_ssh
@@ -40,14 +39,14 @@ function __init() {
     [ -f "$init" ] && source "$init"
   done
 
-  for dir in "${_profiles[@]}"; do
-    # load custom init extensions
-    if [ -d "$dir" ] && [ "$(ls -1A "$dir")" ]; then
-      for init in "$dir"/*; do
-        . $init
-      done
-    fi
-  done
+  # load extensions from ~/.local/profile.d
+  if [ -d ~/.local/profile.d ]; then
+    for init in ~/.local/profile.d/*; do
+      if [ -f "$init" ]; then
+        source "$init"
+      fi
+    done
+  fi
 
   if command -v mvim &> /dev/null; then
     export VISUAL="mvim -f"
