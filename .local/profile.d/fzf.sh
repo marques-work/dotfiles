@@ -5,7 +5,8 @@ if ! (return 0 2>/dev/null); then
   exit 1
 fi
 
-if ! hash fzf &> /dev/null && [ -f ~/.fzf.bash ]; then
+if { ! hash fzf &> /dev/null || ! type _fzf_complete &> /dev/null; } && [ -f ~/.fzf.bash ]; then
+  # shellcheck disable=SC1090
   source ~/.fzf.bash
   hash -r
 fi
@@ -23,7 +24,7 @@ if hash fzf &> /dev/null; then
     export FZF_ALT_C_OPTS="--preview 'exa --tree {} | head -500'"
   fi
 
-  if hash bats &> /dev/null; then
+  if hash bat &> /dev/null; then
     export FZF_CTRL_T_OPTS="--preview 'bat --style=numbers --color=always --line-range :500 {}' $FZF_CTRL_T_OPTS"
   fi
 fi
