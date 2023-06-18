@@ -1,6 +1,9 @@
 #!/bin/bash
 # vim: sts=2 sw=2 et
 
+# by default, create files with minimal permissions
+umask 0077
+
 # If not running interactively, don't do anything
 case $- in
   *i*) ;;
