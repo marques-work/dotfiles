@@ -30,3 +30,12 @@ if hash figlet &> /dev/null; then
     fig-banner "$*" | awk '{ print "#", $0 }'
   }
 fi
+
+function restart-trackpad() {
+  local touchpad_id=''
+  touchpad_id="$(xinput --list | grep -i touchpad | awk -F 'id=' '{print $2}' | awk '{ print $1 }')"
+
+  xinput disable "$touchpad_id"
+  sleep 1
+  xinput enable "$touchpad_id"
+}
