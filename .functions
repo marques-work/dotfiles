@@ -39,3 +39,9 @@ function restart-trackpad() {
   sleep 1
   xinput enable "$touchpad_id"
 }
+
+function git-all() {
+  for repo in */.git; do
+    git -C "$repo/.." pull || :
+  done
+}
