@@ -39,3 +39,7 @@ function restart-trackpad() {
   sleep 1
   xinput enable "$touchpad_id"
 }
+
+function pbcopy () { xsel --clipboard; }
+
+function pbpaste () { xsel --clipboard; }
