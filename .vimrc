@@ -41,7 +41,7 @@ if has("gui_running")
   if has("gui_gtk3") || has("gui_gtk2")
     set guifont=Hack\ 18
   elseif has("gui_macvim")
-    set guifont=Hack:h16
+    set guifont=Hack:h18
   endif
 
   colo catppuccin_mocha
