@@ -30,6 +30,7 @@ set noswapfile
 set hlsearch
 set incsearch
 set showcmd
+set modeline
 let mapleader = " "
 
 " This messes up default color schemes; look much better with this turned off
