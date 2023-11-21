@@ -40,6 +40,10 @@ function restart-trackpad() {
   xinput enable "$touchpad_id"
 }
 
-function pbcopy () { xsel --clipboard; }
+if ! hash pbcopy &> /dev/null; then
+  function pbcopy () { xsel --clipboard; }
+fi
 
-function pbpaste () { xsel --clipboard; }
+if ! hash pbpaste &> /dev/null; then
+  function pbpaste () { xsel --clipboard; }
+fi
