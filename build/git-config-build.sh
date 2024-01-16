@@ -23,6 +23,7 @@ function _build_gitconfig() {
   _gcfg alias.st status
   _gcfg alias.upst log\ origin/main..HEAD
   _gcfg alias.vf diff\ --cached\ --check
+  _gcfg alias.recent "!r() { refbranch=\$1 count=\$2; git for-each-ref --sort=-committerdate 'refs/remotes/origin/*' --format='%(refname:short)|%(HEAD)%(color:yellow)%(refname:lstrip=3)|%(color:bold green)%(committerdate:relative)|%(color:blue)%(subject)|%(color:magenta)%(authorname)%(color:reset)' --color=always --count=\${count:-20} | while read line; do branch=\$(echo \"\$line\" | awk 'BEGIN { FS = \"|\" }; { print \$1 }' | tr -d '*'); ahead=\$(git rev-list --count \"\${refbranch:-origin/main}..\${branch}\"); behind=\$(git rev-list --count \"\${branch}..\${refbranch:-origin/main}\"); colorline=\$(echo \"\$line\" | sed 's/^[^|]*|//'); echo \"\$ahead|\$behind|\$colorline\" | awk -F'|' -vOFS='|' '{\$5=substr(\$5,1,70)}1' ; done | ( echo \"ahead|behind|branch|lastcommit|message|author\" && cat) | column -ts'|';}; r"
   _gcfg color.diff-highlight.newhighlight green\ bold\ 22
   _gcfg color.diff-highlight.newnormal green\ bold
   _gcfg color.diff-highlight.oldhighlight red\ bold\ 52
