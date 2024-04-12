@@ -248,12 +248,15 @@ function __show_env_name() {
 
 function __defun_motd() {
   if command -v cp437 &> /dev/null; then
+    # see https://github.com/keaston/cp437 if you want to compile this tool
     function ansicat { cp437 cat "$@"; }
   else
+    # fallback; might not be as performant as the cp437 binary, but who cares
     function ansicat { iconv -c -f 437 -t utf-8 "$@"; }
   fi
 
   function motd {
+    # you can find a lot of great art at https://16colo.rs
     local art="${1:-$(ls ~/.ansi/* | sort -R | tail -1)}"
     ansicat "$art"
     tput sgr0
