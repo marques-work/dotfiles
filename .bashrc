@@ -60,7 +60,7 @@ function __init() {
 
   # cleanup scope
   unset __init_git
-  unset __init_ss
+  unset __init_ssh
   unset __init_version_managers
   unset __init_path_additions
   unset __init_completions
@@ -112,9 +112,9 @@ function __init_path_additions() {
 # \/          \/    \/                                    \/  \/
 
 function __init_git() {
-  GIT_PS1_SHOWCOLORHINTS="true"
-  GIT_PS1_SHOWDIRTYSTATE="true"
-  GIT_PS1_SHOWUPSTREAM="auto"
+  export GIT_PS1_SHOWCOLORHINTS="true"
+  export GIT_PS1_SHOWDIRTYSTATE="true"
+  export GIT_PS1_SHOWUPSTREAM="auto"
 
   if type mvim &> /dev/null; then
     export GIT_EDITOR="mvim -f"
@@ -140,12 +140,16 @@ function __init_version_managers() {
     if [ -r "$HOME/.asdf/plugins/java/set-java-home.bash" ]; then
       . "$HOME/.asdf/plugins/java/set-java-home.bash"
     fi
-  elif [ -r /usr/local/opt/asdf/libexec/asdf.sh ]; then
+  elif type brew &> /dev/null; then
     # homebrew
-    . /usr/local/opt/asdf/libexec/asdf.sh
+    local _pfx="$(brew --prefix)"
 
-    if [ -r "$HOME/.asdf/plugins/java/set-java-home.bash" ]; then
-      . "$HOME/.asdf/plugins/java/set-java-home.bash"
+    if [ -r "$_pfx/opt/asdf/libexec/asdf.sh" ]; then
+      . "$_pfx/opt/asdf/libexec/asdf.sh"
+
+      if [ -r "$HOME/.asdf/plugins/java/set-java-home.bash" ]; then
+        . "$HOME/.asdf/plugins/java/set-java-home.bash"
+      fi
     fi
   fi
 }
@@ -165,12 +169,12 @@ function __init_completions() {
   fi
 
   if [ -d "$_pfx/etc/bash_completion.d" ]; then
-    for init in $_pfx/etc/bash_completion.d/*; do
-      if [ "$(basename $init)" = "wg" -o "$(basename $init)" = "wg-quick" ]; then
+    for init in "$_pfx"/etc/bash_completion.d/*; do
+      if [ "$(basename "$init")" = "wg" ] || [ "$(basename "$init")" = "wg-quick" ]; then
         continue
       fi
 
-      . $init
+      . "$init"
     done
   elif [ -r /usr/share/bash-completion/bash_completion ]; then
     . /usr/share/bash-completion/bash_completion
