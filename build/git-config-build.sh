@@ -52,7 +52,6 @@ function _apply_if_delta() {
     _gcfg_rm_section color.diff
     _gcfg_rm_section color.diff-highlight
 
-    _gcfg add.interactive.usebuiltin false
     _gcfg core.pager delta
     _gcfg delta.light false
     _gcfg delta.line-numbers true
