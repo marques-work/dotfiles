@@ -47,3 +47,10 @@ fi
 if ! hash pbpaste &> /dev/null; then
   function pbpaste () { xsel --clipboard; }
 fi
+
+# detect nvidia linux drivers
+if type -P nvidia-smi &> /dev/null; then
+  function nvrun() {
+    __NV_PRIME_RENDER_OFFLOAD=1 __GLX_VENDOR_LIBRARY_NAME=nvidia DRI_PRIME=1 "$@"
+  }
+fi
