@@ -124,8 +124,38 @@ function __init_git() {
 }
 
 function __init_ssh() {
-  eval "$(ssh-agent -s)"
-  trap "ssh-agent -k" EXIT
+  local socket_path="${TMPDIR:-/tmp}/ssh-agent-shared/agent.$USER.sock"
+  local identities=''
+
+  # test if the socket exists and use `ssh-add -L` to test if the socket is working correctly.
+  # an edge case is that `ssh-add -L` will fail if no identities have been loaded yet, so we
+  # explicitly test for this case
+  if [ -S "$socket_path" ] && { identities="$(SSH_AUTH_SOCK="$socket_path" ssh-add -L 2>&1)" || [ 'The agent has no identities.' = "$identities" ]; }; then
+    export SSH_AUTH_SOCK="$socket_path"
+  else
+    reincarnate_ssh_agent "$socket_path"
+  fi
+}
+
+function reincarnate_ssh_agent() {
+  local socket_path="${1:-${SSH_AUTH_SOCK:?reincarnate_ssh_agent needs a socket path or SSH_AUTH_SOCK must be set}}"
+  mkdir -p "$(dirname "$socket_path")"
+
+  local ssh_pids=''
+
+  # kill any ssh-agents
+  if ssh_pids="$(ps -eopid,command | grep '[s]sh-agent' | awk '{print $1}')"; then
+    for pid in $ssh_pids; do
+      SSH_AGENT_PID="$pid" ssh-agent -k
+      rm -rf "$socket_path"
+    done
+  fi
+
+  # start a new ssh-agent with the specified socket path
+  eval "$(ssh-agent -s -a "$socket_path")"
+
+  # shouldn't need to but for good measure, set this explicitly
+  export SSH_AUTH_SOCK="$socket_path"
 }
 
 function __init_version_managers() {
