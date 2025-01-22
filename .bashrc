@@ -130,7 +130,7 @@ function __init_ssh() {
   # test if the socket exists and use `ssh-add -L` to test if the socket is working correctly.
   # an edge case is that `ssh-add -L` will fail if no identities have been loaded yet, so we
   # explicitly test for this case
-  if [ -S "$socket_path" ] && { identities="$(SSH_AUTH_SOCK="$socket_path" ssh-add -L 2>&1)" || [ 'The agent has no identities.' = "$identities" ]; }; then
+  if [ -S "$socket_path" ] && { identities="$(SSH_AUTH_SOCK="$socket_path" ssh-add -l 2>&1)" || [ 'The agent has no identities.' = "$identities" ]; }; then
     export SSH_AUTH_SOCK="$socket_path"
   else
     reincarnate_ssh_agent "$socket_path"
