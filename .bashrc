@@ -32,8 +32,8 @@ function __init() {
 
   __init_git
   __init_ssh
-  __init_version_managers
   __init_path_additions "$_pfx"
+  __init_version_managers
   __init_completions "$_pfx"
   __init_prompt
   __defun_motd
@@ -61,8 +61,8 @@ function __init() {
   # cleanup scope
   unset __init_git
   unset __init_ssh
-  unset __init_version_managers
   unset __init_path_additions
+  unset __init_version_managers
   unset __init_completions
   unset __init_prompt
   unset __defun_motd
@@ -163,9 +163,9 @@ function __init_version_managers() {
     eval "$(direnv hook bash)"
   fi
 
-  if [ -r "$HOME/.asdf/asdf.sh" ]; then
-    . "$HOME/.asdf/asdf.sh"
-    . "$HOME/.asdf/completions/asdf.bash"
+  if hash asdf &> /dev/null; then
+    export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+    source "${ASDF_DATA_DIR:-$HOME/.asdf}/completions/asdf.bash"
 
     if [ -r "$HOME/.asdf/plugins/java/set-java-home.bash" ]; then
       . "$HOME/.asdf/plugins/java/set-java-home.bash"
