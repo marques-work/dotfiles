@@ -11,6 +11,7 @@ function _build_gitconfig() {
   _gcfg alias.d diff
   _gcfg alias.dc diff\ --cached
   _gcfg alias.deps commit\ -m\ \'build\(deps\):\ update\ dependencies\'
+  _gcfg alias.ff-main 'update-ref refs/heads/main refs/remotes/origin/main'
   _gcfg alias.fixup commit\ --amend\ --no-edit
   _gcfg alias.fo fetch\ origin
   _gcfg alias.gr log\ --graph\ --decorate=short\ --abbrev-commit\ --pretty=short
