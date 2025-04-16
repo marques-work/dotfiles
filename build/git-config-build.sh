@@ -11,7 +11,7 @@ function _build_gitconfig() {
   _gcfg alias.d diff
   _gcfg alias.dc diff\ --cached
   _gcfg alias.deps commit\ -m\ \'build\(deps\):\ update\ dependencies\'
-  _gcfg alias.ff-main 'update-ref refs/heads/main refs/remotes/origin/main'
+  _gcfg alias.ff-main "!f() { local head=\"\${1:-main}\"; local upstream=\"origin/\$head\";if git merge-base --is-ancestor \"\$head\" \"\$upstream\"; then git update-ref \"refs/heads/\$head\" \"refs/remotes/\$upstream\"; printf '\e[32;1mFast-forwarded %s to %s\e[0m\n' \"\$head\" \"\$upstream\"; else printf '\e[31;1mFast-forward not possible. Local %s has diverged from %s.\e[0m\n' \"\$head\" \"\$upstream\"; return 1; fi; }; f"
   _gcfg alias.fixup commit\ --amend\ --no-edit
   _gcfg alias.fo fetch\ origin
   _gcfg alias.gr log\ --graph\ --decorate=short\ --abbrev-commit\ --pretty=short
