@@ -18,6 +18,7 @@ function _build_gitconfig() {
   _gcfg alias.hardreset "!f() { printf '\e[33;1mHard-reset this branch to upstream? (y/N): \e[0m' && read confirm && if [ 'y' = \"\$confirm\" ]; then git reset --hard @{u}; else printf '\e[31;1m%s\e[0m\n' 'Aborting.'; fi; }; f"
   _gcfg alias.ig status\ --ignored
   _gcfg alias.kl clean\ -ffdx\ -e\ .idea\ -e\ .envrc\ -e\ .tool-versions
+  _gcfg alias.m1 log\ -1\ --format=%B
   _gcfg alias.mine \!git\ log\ --author=\"\$\(git\ config\ --get\ user.name\)\"\ --pretty=\'%C\(yellow\)%h%Creset\ %an\ %C\(cyan\)%ad%Creset\ %Cred%cd%Creset\ %Cgreen%s%Creset\'
   _gcfg alias.mu merge\ @\{u\}
   _gcfg alias.new-date '!git commit --amend --no-edit --date="$(date "+%a %b %d %H:%M:%S %Y %z")"'
