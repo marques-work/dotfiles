@@ -165,7 +165,6 @@ function __init_version_managers() {
 
   if hash asdf &> /dev/null; then
     export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
-    source "${ASDF_DATA_DIR:-$HOME/.asdf}/completions/asdf.bash"
 
     if [ -r "$HOME/.asdf/plugins/java/set-java-home.bash" ]; then
       . "$HOME/.asdf/plugins/java/set-java-home.bash"
