@@ -5,6 +5,22 @@ function trim() {
   awk '{ sub(/^[ \t]+/, ""); sub(/[ \t]+$/, ""); print }' <<< "$*"
 }
 
+function lstun() {
+  ps -eo pid,command |
+    awk '
+      NR == 1 { next }  # skip header
+      $0 ~ /(^|[[:space:]])ssh([[:space:]]|$)/ &&
+      $0 ~ /(^|[[:space:]])-([DLR])([[:space:]]|[^[:space:]])/ {
+        print
+        found = 1
+      }
+
+      END {
+        exit (found ? 0 : 1)
+      }
+    '
+}
+
 if hash figlet &> /dev/null; then
   function fig-banner() {
     local text="$*"
